@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import org.ccnx.ccn.CCNHandle;
 import org.ccnx.ccn.CCNSync;
 import org.ccnx.ccn.config.ConfigurationException;
-import org.ccnx.ccn.io.RepositoryOutputStream;
+import org.ccnx.ccn.io.RepositoryVersionedOutputStream;
 import org.ccnx.ccn.io.content.ConfigSlice;
 import org.ccnx.ccn.profiles.VersioningProfile;
 import org.ccnx.ccn.protocol.ContentName;
@@ -80,7 +80,8 @@ public class ContentSync {
 			messagePrefix = this.namespace.append(title);
 			ContentName versionedContentName = VersioningProfile.updateVersion(messagePrefix);
 			
-			RepositoryOutputStream repout = new RepositoryOutputStream(versionedContentName, handler);
+			//RepositoryOutputStream repout = new RepositoryOutputStream(versionedContentName, handler);
+			RepositoryVersionedOutputStream repout = new RepositoryVersionedOutputStream(versionedContentName, handler);
 			
 			ObjectOutputStream oos = new ObjectOutputStream(repout);
 			oos.writeObject(newMessage);
@@ -100,7 +101,7 @@ public class ContentSync {
 
 	public void changeLocation(String newLocation) throws IOException, MalformedContentNameStringException {
 		ccnSyncClient.stopSync(syncHandler, slice);
-		this.namespace = ContentName.fromNative("/" + newLocation + "/posts");
+		this.namespace = ContentName.fromNative("/posts/" + newLocation);
 		start();
 	}
 

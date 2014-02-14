@@ -20,7 +20,7 @@ public class MallGUI implements Runnable, IMallUI{
 		
 		try {
 			topology = ContentName.fromNative("/mall");
-			namespace = ContentName.fromNative("/floor1/posts");
+			namespace = ContentName.fromNative("/posts/floor1");
 			syncClient = new ContentSync(topology, namespace,this);
 			
 			//Create and set up the window.

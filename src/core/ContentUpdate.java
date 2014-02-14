@@ -41,6 +41,7 @@ public class ContentUpdate implements Runnable{
 		Interest interest = VersioningProfile.latestVersionInterest(versionedName, null, null);
 		try {
 			CCNVersionedInputStream inputStream = new CCNVersionedInputStream(interest.name(), handler);
+
 			ObjectInputStream ois = new ObjectInputStream(inputStream);
 			
 			MallMessage newMessage = (MallMessage) ois.readObject();
