@@ -19,11 +19,15 @@ public class ContentUpdate implements Runnable{
 	
 	private CCNHandle handler;
 	
-	public ContentUpdate(ContentName versionedName, IMallUI ui, CCNHandle handler) {
+	private ContentSync sync;
+	
+	public ContentUpdate(ContentName versionedName, ContentSync sync) {
 		this.versionedName = versionedName;
-		this.ui = ui;
-		this.handler = handler;
+		this.ui = sync.getUI();
+		this.handler = sync.getHandler();
+		this.sync = sync;
 	}
+
 
 
 	@Override
@@ -44,14 +48,10 @@ public class ContentUpdate implements Runnable{
 
 			ObjectInputStream ois = new ObjectInputStream(inputStream);
 			
-			MallMessage newMessage = (MallMessage) ois.readObject();
+			MessageCollection newCollection = (MessageCollection) ois.readObject();
 			
-			StringBuilder messageStr = new StringBuilder();
-			messageStr.append(newMessage.getTitle() + "\n");
-			messageStr.append(new String(new char[newMessage.getTitle().length()]).replace('\0', '='));
-			messageStr.append("\n" + newMessage.getMessage() + "\n");
-
-			ui.showLine(messageStr.toString());
+			sync.updateCollection(newCollection);			
+			ui.showLine(newCollection.getContentString());
 
 			ois.close();
 			

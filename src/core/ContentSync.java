@@ -30,11 +30,14 @@ public class ContentSync {
 
 	private SyncHandler syncHandler;
 	
+	private MessageCollection messageStore;
+	
 	public ContentSync(ContentName topology, ContentName namespace, IMallUI ui) {
 		
 		this.namespace = namespace;
 		this.topology = topology;
 		this.ui = ui;
+		this.messageStore = new MessageCollection();
 		
 		
 		try {	
@@ -60,7 +63,7 @@ public class ContentSync {
 	public void start()
 	{
 		try {
-			syncHandler = new SyncHandler(ui, handler);
+			syncHandler = new SyncHandler(this);
 			slice = ccnSyncClient.startSync(handler, topology, namespace, syncHandler);
 		} catch (ConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -73,24 +76,21 @@ public class ContentSync {
 	
 	public void sendMessage(String title, String message)
 	{
-		MallMessage newMessage = new MallMessage(title, message);
+		messageStore.addMessage(title, message);
 		
 		ContentName messagePrefix;
 		try {
-			messagePrefix = this.namespace.append(title);
+			messagePrefix = this.namespace;
 			ContentName versionedContentName = VersioningProfile.updateVersion(messagePrefix);
 			
 			//RepositoryOutputStream repout = new RepositoryOutputStream(versionedContentName, handler);
 			RepositoryVersionedOutputStream repout = new RepositoryVersionedOutputStream(versionedContentName, handler);
 			
 			ObjectOutputStream oos = new ObjectOutputStream(repout);
-			oos.writeObject(newMessage);
+			oos.writeObject(messageStore);
 			oos.flush();
 			repout.flush();
 			oos.close();
-		} catch (MalformedContentNameStringException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,6 +103,18 @@ public class ContentSync {
 		ccnSyncClient.stopSync(syncHandler, slice);
 		this.namespace = ContentName.fromNative("/posts/" + newLocation);
 		start();
+	}
+
+	public IMallUI getUI() {
+		return ui;
+	}
+
+	public CCNHandle getHandler() {
+		return handler;
+	}
+	
+	public synchronized void updateCollection(MessageCollection newCollection) {
+		messageStore.mergeStore(newCollection);
 	}
 
 }

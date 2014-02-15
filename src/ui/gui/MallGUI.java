@@ -45,6 +45,7 @@ public class MallGUI implements Runnable, IMallUI{
 
 	@Override
 	public void showLine(String line) {
+		mainPane.clearContent();
 		mainPane.showLine(line);
 	}
 
@@ -58,6 +59,5 @@ public class MallGUI implements Runnable, IMallUI{
         frame.pack();
         frame.setVisible(true);
 	}
-
 
 }

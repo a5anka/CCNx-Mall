@@ -33,6 +33,15 @@ public class MallMessage implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+	public String toString() {
+		StringBuilder messageStr = new StringBuilder();
+		messageStr.append(getTitle() + "\n");
+		messageStr.append(new String(new char[getTitle().length()]).replace('\0', '='));
+		messageStr.append("\n" + getMessage() + "\n");
+
+		return messageStr.toString();
+	}
 
 }
 
