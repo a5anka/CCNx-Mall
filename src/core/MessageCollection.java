@@ -34,7 +34,7 @@ public class MessageCollection implements Serializable{
 		StringBuilder messageStr = new StringBuilder();
 		
 		for(MallMessage message: store) {
-			messageStr.append(message.toString());
+			messageStr.append(message.toString() + "\n");
 		}
 		
 		return messageStr.toString();

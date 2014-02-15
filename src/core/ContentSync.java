@@ -102,6 +102,7 @@ public class ContentSync {
 	public void changeLocation(String newLocation) throws IOException, MalformedContentNameStringException {
 		ccnSyncClient.stopSync(syncHandler, slice);
 		this.namespace = ContentName.fromNative("/posts/" + newLocation);
+		messageStore = new MessageCollection();
 		start();
 	}
 

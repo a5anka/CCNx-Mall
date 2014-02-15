@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 
 import org.ccnx.ccn.CCNHandle;
 import org.ccnx.ccn.io.CCNVersionedInputStream;
+import org.ccnx.ccn.io.NoMatchingContentFoundException;
 import org.ccnx.ccn.profiles.VersioningProfile;
 import org.ccnx.ccn.protocol.ContentName;
 import org.ccnx.ccn.protocol.Interest;
@@ -50,11 +51,12 @@ public class ContentUpdate implements Runnable{
 			
 			MessageCollection newCollection = (MessageCollection) ois.readObject();
 			
-			sync.updateCollection(newCollection);			
+			sync.updateCollection(newCollection);
 			ui.showLine(newCollection.getContentString());
-
 			ois.close();
 			
+		} catch (NoMatchingContentFoundException e) {
+						
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

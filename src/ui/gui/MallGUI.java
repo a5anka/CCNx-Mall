@@ -45,8 +45,10 @@ public class MallGUI implements Runnable, IMallUI{
 
 	@Override
 	public void showLine(String line) {
+		synchronized (mainPane) {
 		mainPane.clearContent();
 		mainPane.showLine(line);
+		}
 	}
 
 	@Override
