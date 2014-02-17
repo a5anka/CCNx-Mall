@@ -1,15 +1,19 @@
 package ui.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,6 +34,10 @@ public class ContentPane {
 	private JTextField locationText; 
 	
 	private ContentSync sync;
+
+	private JComboBox validityList;
+
+	private Map<String, Long> validityStrings;
 	
 	public JPanel createContentPane (ContentSync syncClient){
 		this.sync = syncClient;
@@ -64,14 +72,33 @@ public class ContentPane {
         contentPane.add(titleLabel);
         
         titleText= new JTextField();
+        titleText.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPane.add(titleText);
         
         JLabel messageLabel = new JLabel("Message");
         contentPane.add(messageLabel);
         
         messageText= new JTextField();
+        messageText.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPane.add(messageText);
         
+        JLabel validityLabel = new JLabel("Validity");
+        contentPane.add(validityLabel);
+        
+        validityStrings = new HashMap<String, Long>();
+        validityStrings.put("1 min", (long) 60000);
+        validityStrings.put("5 min", (long) 300000);
+        validityStrings.put("1 hour", (long) 3600000);
+        validityStrings.put("6 hour", (long) 21600000);
+        validityStrings.put("1 day", (long) 86400000);
+        
+        // Separate list needed for correct ordering of items in combobox
+        String[] timeStrings = {"1 min", "5 min", "1 hour", "6 hour", "1 day"};
+        
+        validityList = new JComboBox(timeStrings);
+        validityList.setAlignmentX(Component.LEFT_ALIGNMENT);
+        contentPane.add(validityList);
+        		
         JPanel buttonPane = createHorizontalPane();
         //buttonPane.add(Box.createHorizontalGlue());
         JButton sendButton = createSendButton();
@@ -94,7 +121,9 @@ public class ContentPane {
 			@Override
 			
 			public void actionPerformed(ActionEvent arg0) {
-				sync.sendMessage(titleText.getText(), messageText.getText());
+				sync.sendMessage(titleText.getText(), 
+						messageText.getText(), 
+						validityStrings.get(validityList.getSelectedItem()));
 				titleText.setText("");
 				messageText.setText("");
 			}

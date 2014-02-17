@@ -24,6 +24,12 @@ public class MallMessage implements Serializable{
 		this.expireTime = System.currentTimeMillis() + defaultValidity;
 	}
 
+	public MallMessage(String title, String message, Long validity) {
+		this.title = title;
+		this.message = message;
+		this.expireTime = System.currentTimeMillis() + validity;
+	}
+
 	public String getTitle() {
 		return title;
 	}

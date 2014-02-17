@@ -26,6 +26,12 @@ public class MessageCollection implements Serializable{
 		store.add(newMessage);
 	}
 	
+	public void addMessage(String title, String message, Long validity) {
+		MallMessage newMessage = new MallMessage(title, message, validity);
+
+		store.add(newMessage);
+	}
+	
 	public void mergeStore(MessageCollection otherCollection) {
 		replaceStoreWith(otherCollection.store);
 	}
@@ -62,4 +68,6 @@ public class MessageCollection implements Serializable{
 	private synchronized void replaceStoreWith(ArrayList<MallMessage> tempStore) {
 		store = tempStore;		
 	}
+
+	
 }

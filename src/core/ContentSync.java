@@ -81,6 +81,13 @@ public class ContentSync {
 		
 		writeToRepository();	
 	}
+	
+	public void sendMessage(String title, String message, Long validity) {
+		messageStore.addMessage(title, message,validity);
+		messageStore.removeExpired();
+		
+		writeToRepository();
+	}
 
 	private void writeToRepository() {
 		ContentName messagePrefix;
