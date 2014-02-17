@@ -9,13 +9,19 @@ public class MallMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = 4358706133916440176L;
 
+	// Valid for 1 minute
+	private static final long defaultValidity = 300000;
+	
 	private String title;
 	
 	private String message;
 	
+	private long expireTime;
+	
 	public MallMessage(String title, String message) {
 		this.title = title;
 		this.message = message;
+		this.expireTime = System.currentTimeMillis() + defaultValidity;
 	}
 
 	public String getTitle() {
@@ -41,6 +47,10 @@ public class MallMessage implements Serializable{
 		messageStr.append("\n" + getMessage() + "\n");
 
 		return messageStr.toString();
+	}
+	
+	public boolean isExpired() {
+		return (expireTime <= System.currentTimeMillis());
 	}
 
 }

@@ -20,14 +20,14 @@ public class MessageCollection implements Serializable{
 		store.add(newMessage);
 	}
 	
-	public void addMessage(String title, String message) {
+	public synchronized void addMessage(String title, String message) {
 		MallMessage newMessage = new MallMessage(title, message);
 
 		store.add(newMessage);
 	}
 	
 	public void mergeStore(MessageCollection otherCollection) {
-		store = otherCollection.store;
+		replaceStoreWith(otherCollection.store);
 	}
 
 	public String getContentString() {
@@ -38,5 +38,28 @@ public class MessageCollection implements Serializable{
 		}
 		
 		return messageStr.toString();
+	}
+	
+	public boolean removeExpired() {
+		boolean stateChanged = false;
+		
+		ArrayList<MallMessage> tempStore = new ArrayList<MallMessage>();
+		for(MallMessage message: store) {
+			if (!message.isExpired()) {
+				tempStore.add(message);
+			} else {
+				stateChanged = true;
+			}
+		}
+		
+		if (stateChanged) {
+			replaceStoreWith(tempStore);
+		}
+		
+		return stateChanged;
+	}
+
+	private synchronized void replaceStoreWith(ArrayList<MallMessage> tempStore) {
+		store = tempStore;		
 	}
 }

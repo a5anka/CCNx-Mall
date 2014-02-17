@@ -77,7 +77,12 @@ public class ContentSync {
 	public void sendMessage(String title, String message)
 	{
 		messageStore.addMessage(title, message);
+		messageStore.removeExpired();
 		
+		writeToRepository();	
+	}
+
+	private void writeToRepository() {
 		ContentName messagePrefix;
 		try {
 			messagePrefix = this.namespace;
@@ -95,8 +100,6 @@ public class ContentSync {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 	public void changeLocation(String newLocation) throws IOException, MalformedContentNameStringException {
@@ -116,6 +119,9 @@ public class ContentSync {
 	
 	public synchronized void updateCollection(MessageCollection newCollection) {
 		messageStore.mergeStore(newCollection);
+		if (messageStore.removeExpired()) {
+			writeToRepository();
+		}
 	}
 
 }

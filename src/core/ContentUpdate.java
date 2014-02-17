@@ -50,10 +50,15 @@ public class ContentUpdate implements Runnable{
 			ObjectInputStream ois = new ObjectInputStream(inputStream);
 			
 			MessageCollection newCollection = (MessageCollection) ois.readObject();
-			
-			sync.updateCollection(newCollection);
-			ui.showLine(newCollection.getContentString());
+
 			ois.close();
+
+			sync.updateCollection(newCollection);
+			
+			synchronized (sync) {
+				ui.showLine(newCollection.getContentString());
+			}
+
 			
 		} catch (NoMatchingContentFoundException e) {
 						

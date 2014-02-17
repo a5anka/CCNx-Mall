@@ -23,8 +23,6 @@ public class SyncHandler implements CCNSyncHandler  {
 			VersionNumber currentVersion = new VersionNumber(syncedContent);
 			
 			if(latestVersion.before(currentVersion)) {
-				System.out.println("Latest: " + latestVersion.toString());
-				System.out.println("Current: " + currentVersion.toString());
 				latestVersion = currentVersion;
 				(new Thread(new ContentUpdate(syncedContent, sync))).start();
 			}
